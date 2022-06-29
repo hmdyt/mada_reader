@@ -12,7 +12,7 @@ defmodule MadaReader do
 
   def make_tree(path_to_tmp_file) do
     project_root = System.get_env("PROJECT_ROOT")
-    opt = "#{project_root}/rootmacro/make_tree.C(\"#{path_to_tmp_file}\")"
+    opt = "#{project_root}/rootmacro/make_tree.C(\"#{path_to_tmp_file}\", \"#{path_to_tmp_file |> String.replace(".tmp", ".root")}\")"
     IO.puts opt
     "/opt/root/v6.20_06/bin/root" |> System.cmd([opt, "-q", "-b", "-l"]) |> IO.inspect()
   end

@@ -5,7 +5,7 @@
 #include <fstream>
 #include <iostream>
 
-void make_tree(TString path_to_tmp_file = "test01") {
+void make_tree(TString path_to_tmp_file = "test01", TString out_file_name = "test01.root") {
     TTree* tree = new TTree("tree", "tree");
     long long int triger_counter = 0;
     long long int clock_counter = 0;
@@ -47,6 +47,6 @@ void make_tree(TString path_to_tmp_file = "test01") {
 
     std::cout << tree->GetEntries() << std::endl;
 
-    TFile* file = new TFile(path_to_tmp_file.ReplaceAll(".tmp", ".root"), "recreate");
+    TFile* file = new TFile(out_file_name, "recreate");
     tree->Write();
 }
