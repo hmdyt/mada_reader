@@ -54,8 +54,16 @@ defmodule MadaReader.MadaRead do
 
   def split_in_event(file) do
     file
-    |> IO.binread(:eof)
+    |> binread_wrapper()
     |> String.split("uPIC")
+  end
+
+  defp binread_wrapper(file) do
+    try do
+      IO.binread file, :eof
+    rescue
+      _ -> IO.binread file, :all
+    end
   end
 
   def _encode_to_json(mada_structure) do
