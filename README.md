@@ -1,21 +1,19 @@
 # MadaReader
+Gigabit Iwakiboard decoder
 
-**TODO: Add description**
+## Dependencies
+- ROOT
+- Elixir
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `mada_reader` to your list of dependencies in `mix.exs`:
-
-```elixir
-def deps do
-  [
-    {:mada_reader, "~> 0.1.0"}
-  ]
-end
+```bash
+git clone https://github.com/hmdyt/mada_reader.git
+cd mada_reader
+source setup.sh
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/mada_reader>.
-
+## Usage
+```bash
+./mada_reader GBKB-XX_YYYY.mada rootfilename.root
+```
