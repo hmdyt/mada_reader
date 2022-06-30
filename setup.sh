@@ -3,7 +3,7 @@
 export PROJECT_ROOT=$(pwd)
 
 cd rootmacro/build
-cmake
+cmake ..
 make
 cd - > /dev/null
 
