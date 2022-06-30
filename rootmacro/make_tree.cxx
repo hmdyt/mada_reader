@@ -4,6 +4,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <string>
 
 void make_tree(TString path_to_tmp_file = "test01", TString out_file_name = "test01.root") {
     TTree* tree = new TTree("tree", "tree");
@@ -49,4 +50,15 @@ void make_tree(TString path_to_tmp_file = "test01", TString out_file_name = "tes
 
     TFile* file = new TFile(out_file_name, "recreate");
     tree->Write();
+    file->Close();
+}
+
+int main(int argc, char* argv[]) {
+    if (argc != 3) {
+        std::cerr << "Usage: make_tree <inputfile> <outputfile>";
+        exit(0);
+    }
+    std::string inputfile = argv[1];
+    std::string outputfile = argv[2];
+    make_tree(inputfile, outputfile);
 }
