@@ -1,6 +1,10 @@
 defmodule MadaReader do
+  @make_tree_binary Application.fetch_env!(:mada_reader, :make_tree_binary)
+
   def main(argv) do
-    argv[0] |> run
+    argv
+    |> Enum.at(0)
+    |> run
   end
 
   def run(path_to_mada \\ "/Users/yuto/sandbox/mada_reader/per0014/GBKB-13_0003.mada") do
@@ -11,9 +15,15 @@ defmodule MadaReader do
   end
 
   def make_tree(path_to_tmp_file) do
-    project_root = System.get_env("PROJECT_ROOT")
-    opt = "#{project_root}/rootmacro/make_tree.C(\"#{path_to_tmp_file}\", \"#{path_to_tmp_file |> String.replace(".tmp", ".root")}\")"
-    IO.puts opt
-    "/opt/root/v6.20_06/bin/root" |> System.cmd([opt, "-q", "-b", "-l"]) |> IO.inspect()
+    path_to_out_file = path_to_tmp_file |> String.replace(".tmp", ".root")
+    {ret, _status} = System.cmd(@make_tree_binary, [path_to_tmp_file, path_to_out_file])
+    IO.puts ret
   end
 end
+
+# TODO
+# - docker
+# - [DONE] root macro compile (make)
+# - elixir single binary
+# - delete hardcode
+# - multi threading (on perXXXX)
