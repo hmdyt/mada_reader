@@ -13,12 +13,14 @@ defmodule MadaStructure do
     n_iter = mada_structures |> length()
     out_string = mada_structures
     |> Enum.with_index()
-    |> Enum.map(
+    |> Flow.from_enumerable()
+    |> Flow.map(
       fn {x, i} ->
         MadaReader.ProgressBar.render_bar(i, n_iter - 1, "writing tmp file: ")
         encode_a_event(x)
       end
     )
+    |> Enum.to_list()
     |> Enum.join(" ")
     path |> File.write("", [:write])
     path |> File.write(out_string, [:append])
@@ -111,12 +113,14 @@ defmodule MadaReader.MadaRead do
     n_events = splited_events |> length()
     splited_events
     |> Enum.with_index()
-    |> Enum.map(
+    |> Flow.from_enumerable()
+    |> Flow.map(
       fn {event, i} ->
         MadaReader.ProgressBar.render_bar(i, n_events - 1, "decoding mada: ")
         parse_one_event(event)
       end
     )
+    |> Enum.to_list()
   end
 
   def parse_fadcs(
