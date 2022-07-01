@@ -100,6 +100,17 @@ defmodule MadaReader.MadaRead do
   end
   def parse_one_event(_), do: nil
 
+  def parse_all_events(splited_events) do
+    splited_events
+    |> Enum.with_index()
+    |> Enum.map(
+      fn {i, event} ->
+        MadaReader.ProgressBar.render(i, splited_events |> Enum.length)
+        parse_one_event(event)
+      end
+    )
+  end
+
   def parse_fadcs(
       <<
       0x4::size(4), 0::size(2), ch0::size(10),
