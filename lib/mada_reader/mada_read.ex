@@ -10,8 +10,15 @@ defmodule MadaStructure do
   hit: 0
 
   def write(mada_structures, path) do
+    n_iter = mada_structures |> length()
     out_string = mada_structures
-    |> Enum.map(&encode_a_event/1)
+    |> Enum.with_index()
+    |> Enum.map(
+      fn {x, i} ->
+        MadaReader.ProgressBar.render_bar(i, n_iter - 1, "writing tmp file: ")
+        encode_a_event(x)
+      end
+    )
     |> Enum.join(" ")
     path |> File.write("", [:write])
     path |> File.write(out_string, [:append])
@@ -43,7 +50,7 @@ defmodule MadaReader.MadaRead do
     path_to_mada
     |> open_mada_file()
     |> split_in_event()
-    |> Enum.map(&parse_one_event/1)
+    |> parse_all_events()
     |> Enum.filter(&(&1 != nil))
   end
 
@@ -101,11 +108,12 @@ defmodule MadaReader.MadaRead do
   def parse_one_event(_), do: nil
 
   def parse_all_events(splited_events) do
+    n_events = splited_events |> length()
     splited_events
     |> Enum.with_index()
     |> Enum.map(
-      fn {i, event} ->
-        MadaReader.ProgressBar.render(i, splited_events |> Enum.length)
+      fn {event, i} ->
+        MadaReader.ProgressBar.render_bar(i, n_events - 1, "decoding mada: ")
         parse_one_event(event)
       end
     )

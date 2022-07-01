@@ -1,14 +1,12 @@
 defmodule MadaReader.ProgressBar do
-  @format [
-    bar_color: [IO.ANSI.green_background],
-    blank_color: [IO.ANSI.red_background],
-    bar: " ",
-    blank: " ",
-    left: " ",
-    right: " ",
+  @format_bar  [
+    bar_color: [IO.ANSI.magenta],
+    blank_color: [IO.ANSI.magenta],
+    bar: "█",
+    blank: "░",
   ]
 
-  def render(i, n) do
-    ProgressBar.render(i, n, @format)
+  def render_bar(i, n, msg) do
+    ProgressBar.render(i, n, @format_bar ++ [left: msg])
   end
 end
