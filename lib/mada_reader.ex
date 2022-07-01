@@ -38,7 +38,7 @@ defmodule MadaReader do
     ProgressBar.render_spinner(format, fn -> System.cmd(@make_tree_binary, [path_to_tmp_file, path_to_output_file]) end)
   end
 
-  defp make_tree_handler({ret, 0}), do: IO.puts ret
+  defp make_tree_handler({ret, 0}), do: 0
   defp make_tree_handler({ret, status_code}) do
     IO.puts """
     make_tree.cxx error
