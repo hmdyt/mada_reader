@@ -24,6 +24,7 @@ defmodule MadaReader do
     |> MadaReader.MadaRead.run
     |> MadaStructure.write(path_to_mada |> String.replace(".mada", ".tmp"))
     |> make_tree()
+    |> make_tree_handler()
   end
   def run([path_to_mada, path_to_output]) do
     path_to_mada
@@ -34,11 +35,19 @@ defmodule MadaReader do
 
   def make_tree(path_to_tmp_file) do
     path_to_out_file = path_to_tmp_file |> String.replace(".tmp", ".root")
-    {ret, _status} = System.cmd(@make_tree_binary, [path_to_tmp_file, path_to_out_file])
-    IO.puts ret
+    System.cmd(@make_tree_binary, [path_to_tmp_file, path_to_out_file])
   end
   def make_tree(path_to_tmp_file, path_to_output_file) do
-    {ret, _status} = System.cmd(@make_tree_binary, [path_to_tmp_file, path_to_output_file])
-    IO.puts ret
+    System.cmd(@make_tree_binary, [path_to_tmp_file, path_to_output_file])
+  end
+
+  defp make_tree_handler({ret, 0}), do: IO.puts ret
+  defp make_tree_handler({ret, status_code}) do
+    IO.puts """
+    make_tree.cxx error
+    status code: #{status_code}
+    ret: #{ret}
+    """
+    System.halt(1)
   end
 end
