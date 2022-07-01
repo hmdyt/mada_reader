@@ -23,7 +23,8 @@ defmodule MadaReader.MixProject do
   defp deps do
     [
       {:json, "~> 1.4"},
-      {:erlport, "~> 0.1"}
+      {:erlport, "~> 0.1"},
+      {:progress_bar, "~> 2.0"}
     ]
   end
 
