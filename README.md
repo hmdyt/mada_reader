@@ -20,7 +20,7 @@ source setup.sh
 ./mada_reader GBKB-XX_YYYY.mada rootfilename.root
 ```
 
-### ダンプされた1ボードのあるイベントをみる (未実装)
+### ダンプされた1ボードのあるイベントをみる (開発中)
 
 ```bash
 one_event_viewer rootfilename.root treename i_event
