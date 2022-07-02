@@ -13,7 +13,7 @@ defmodule MadaReader do
     System.halt(1)
   end
 
-  defp run([path_to_mada, path_to_output]) do
+  def run([path_to_mada, path_to_output]) do
     path_to_mada
     |> MadaReader.BinaryParser.run()
     |> MadaReader.MadaStructure.write(path_to_output)
