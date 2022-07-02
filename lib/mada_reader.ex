@@ -2,18 +2,13 @@ defmodule MadaReader do
   def main(argv) do
     argv
     |> parse_args()
-  end
-
-  defp parse_args(argv) do
-    argv
-    |> parse_args_helper()
     |> IO.inspect()
     |> run()
   end
 
-  defp parse_args_helper([inputfile]), do: [inputfile, inputfile |> String.replace(".mada", ".tmp")]
-  defp parse_args_helper([inputfile, outputfile]), do: [inputfile, outputfile]
-  defp parse_args_helper(_) do
+  defp parse_args([inputfile]), do: [inputfile, inputfile |> String.replace(".mada", ".tmp")]
+  defp parse_args([inputfile, outputfile]), do: [inputfile, outputfile]
+  defp parse_args(_) do
     IO.puts "Usage: mada_reader <input.mada> [output.root]"
     System.halt(1)
   end
