@@ -1,4 +1,6 @@
 defmodule MadaReader.MadaStructure do
+  @tmp_dir Application.fetch_env!(:mada_reader, :tmp_dir)
+
   defstruct trigger_counter: 0,
   clock_counter: 0,
   input_ch2_counter: 0,
@@ -9,7 +11,12 @@ defmodule MadaReader.MadaStructure do
   encoding_clock_depth: 0,
   hit: 0
 
-  def write(mada_structures, path) do
+  def write(mada_structures, path_to_mada) do
+    perpare_tmp_dir()
+    mada_filename = path_to_mada
+    |> Path.basename
+    |> String.replace(".mada", ".tmp")
+    path_to_tmp = "#{@tmp_dir}/#{mada_filename}"
     n_iter = mada_structures |> length()
     out_string = mada_structures
     |> Enum.with_index()
@@ -20,9 +27,9 @@ defmodule MadaReader.MadaStructure do
       end
     )
     |> Enum.join(" ")
-    path |> File.write("", [:write])
-    path |> File.write(out_string, [:append])
-    path
+    path_to_tmp |> File.write("", [:write])
+    path_to_tmp |> File.write(out_string, [:append])
+    path_to_tmp |> IO.inspect()
   end
 
   defp encode_a_event(mada_structure) do
@@ -41,5 +48,9 @@ defmodule MadaReader.MadaStructure do
       mada_structure.hit |> List.flatten() |> Enum.join(" ")
     ]
     |> Enum.join(" ")
+  end
+
+  defp perpare_tmp_dir do
+    File.mkdir(@tmp_dir)
   end
 end
