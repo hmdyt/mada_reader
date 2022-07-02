@@ -52,13 +52,14 @@ TH2F* init_axis(TString title){
 
 int main(int argc, char* argv[]) {
     // argument parse
-    if (argc != 4) {
-        std::cerr << "Usage: one_event_viewer <root_file> <tree_name> <i_event>";
+    if (argc != 5) {
+        std::cerr << "Usage: one_event_viewer <root_file> <tree_name> <i_event> <output_file>";
         exit(1);
     }
     TString root_file_name = argv[1];
     TString tree_name = argv[2];
     int i_event = ((TString)argv[3]).Atoi();
+    TString output_file = argv[4];
 
     // init tree
     int fadc[4][1024];
@@ -111,7 +112,7 @@ int main(int argc, char* argv[]) {
     fadc_graphs.at(2)->Draw("L SAME");
     fadc_graphs.at(3)->Draw("L SAME");
     hit_graph->Draw("P SAME");
-    c->SaveAs("one_event_viewer.png");
+    c->SaveAs(output_file);
 
     return 0;
 }
