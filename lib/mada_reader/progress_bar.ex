@@ -17,6 +17,8 @@ defmodule MadaReader.ProgressBar do
   end
 
   def render_spinner(msg, func) do
-    ProgressBar.render_spinner(@format_spinner ++ [text: msg], func)
+    format = [text: msg, done: [IO.ANSI.green, "✓", IO.ANSI.reset, " Done [#{msg}]"]]
+      ++ @format_spinner
+    ProgressBar.render_spinner(format ++ [text: msg], func)
   end
 end
