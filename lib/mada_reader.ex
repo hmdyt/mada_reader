@@ -29,13 +29,10 @@ defmodule MadaReader do
   end
 
   def make_tree(path_to_tmp_file, path_to_output_file) do
-    format = [
-      frames: :braille,
-      spinner_color: IO.ANSI.magenta,
-      text: "calling make_tree.cxx",
-      done: [IO.ANSI.green, "✓", IO.ANSI.reset, " Done"],
-    ]
-    ProgressBar.render_spinner(format, fn -> System.cmd(@make_tree_binary, [path_to_tmp_file, path_to_output_file]) end)
+    MadaReader.ProgressBar.render_spinner(
+      "calling make_tree.cxx",
+      fn -> System.cmd(@make_tree_binary, [path_to_tmp_file, path_to_output_file]) end
+    )
   end
 
   defp make_tree_handler({_ret, 0}), do: 0
