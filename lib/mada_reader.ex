@@ -4,7 +4,7 @@ defmodule MadaReader do
     |> parse_args()
   end
 
-  def parse_args(argv) do
+  defp parse_args(argv) do
     argv
     |> parse_args_helper()
     |> IO.inspect()
@@ -18,10 +18,10 @@ defmodule MadaReader do
     System.halt(1)
   end
 
-  def run([path_to_mada, path_to_output]) do
+  defp run([path_to_mada, path_to_output]) do
     path_to_mada
-    |> MadaReader.MadaRead.run()
-    |> MadaStructure.write(path_to_output)
+    |> MadaReader.BinaryParser.run()
+    |> MadaReader.MadaStructure.write(path_to_output)
     |> MadaReader.RootWrapper.call_make_tree(path_to_output)
   end
 end
