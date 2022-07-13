@@ -8,11 +8,13 @@ defmodule MadaReader.BinaryParser do
   end
 
   defp open_mada_file(file_path) do
+    put_memory_usage("start at open_mada_file")
     {:ok, file} = File.open(file_path)
     file
   end
 
   defp split_in_event(file) do
+    put_memory_usage("start at split_in_event")
     file
     |> binread_wrapper()
     |> String.split("uPIC")
@@ -41,6 +43,8 @@ defmodule MadaReader.BinaryParser do
     #hit::size(163680),
     >>
   ) do
+    IO.puts ""
+    put_memory_usage("start at parse_one_event")
     %MadaReader.MadaStructure{
       trigger_counter: trigger_counter,
       clock_counter: clock_counter,
@@ -56,6 +60,7 @@ defmodule MadaReader.BinaryParser do
   defp parse_one_event(_), do: nil
 
   defp parse_all_events(splited_events) do
+    put_memory_usage("start at parse_all_events")
     n_events = splited_events |> length()
     splited_events
     |> Enum.with_index()
@@ -113,4 +118,10 @@ defmodule MadaReader.BinaryParser do
 
   defp bool_to_01(true), do: 1
   defp bool_to_01(false), do: 0
+
+  defp put_memory_usage(msg) do
+    allocated = :recon_alloc.memory(:allocated) / 1000_000
+    |> Float.floor
+    IO.puts "memory usage: #{allocated} MB  #{msg}"
+  end
 end
