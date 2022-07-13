@@ -12,27 +12,27 @@ defmodule MadaReader.MadaStructure do
   hit: 0
 
   def write(mada_structures, path_to_mada) do
+    path_to_tmp_file = prepare_tmp_file(path_to_mada)
+    # n_iter = mada_structures |> length()
+    mada_structures
+    |> Stream.map(&encode_a_event/1)
+    |> Stream.map(fn x -> write_an_event(x, path_to_tmp_file) end)
+    |> Enum.to_list()
+    path_to_tmp_file
+  end
+
+  defp prepare_tmp_file(path_to_mada) do
     perpare_tmp_dir()
     mada_filename = path_to_mada
     |> Path.basename
     |> String.replace(".mada", ".tmp")
-    path_to_tmp = "#{@tmp_dir}/#{mada_filename}"
-    n_iter = mada_structures |> length()
-    out_string = mada_structures
-    |> Enum.with_index()
-    |> Enum.map(
-      fn {x, i} ->
-        MadaReader.ProgressBar.render_bar(i, n_iter - 1, "writing tmp file: ")
-        encode_a_event(x)
-      end
-    )
-    |> Enum.join(" ")
-    path_to_tmp |> File.write("", [:write])
-    path_to_tmp |> File.write(out_string, [:append])
-    path_to_tmp |> IO.inspect()
+    path_to_tmp_file = "#{@tmp_dir}/#{mada_filename}"
+    path_to_tmp_file |> File.write("", [:write])
+    path_to_tmp_file
   end
 
   defp encode_a_event(mada_structure) do
+    add_space = &(&1 <> " ")
     [
       mada_structure.trigger_counter,
       mada_structure.clock_counter,
@@ -48,6 +48,11 @@ defmodule MadaReader.MadaStructure do
       mada_structure.hit |> List.flatten() |> Enum.join(" ")
     ]
     |> Enum.join(" ")
+    |> add_space.()
+  end
+
+  defp write_an_event(encoded_mada_structure, path_to_tmp_file) do
+    :ok = path_to_tmp_file |> File.write(encoded_mada_structure, [:append])
   end
 
   defp perpare_tmp_dir do

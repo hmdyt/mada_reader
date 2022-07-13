@@ -4,7 +4,7 @@ defmodule MadaReader.BinaryParser do
     |> open_mada_file()
     |> split_in_event()
     |> parse_all_events()
-    |> Enum.filter(&(&1 != nil))
+    |> Stream.filter(&(&1 != nil))
   end
 
   defp open_mada_file(file_path) do
@@ -61,15 +61,9 @@ defmodule MadaReader.BinaryParser do
 
   defp parse_all_events(splited_events) do
     put_memory_usage("start at parse_all_events")
-    n_events = splited_events |> length()
+    # n_events = splited_events |> length()
     splited_events
-    |> Enum.with_index()
-    |> Enum.map(
-      fn {event, i} ->
-        MadaReader.ProgressBar.render_bar(i, n_events - 1, "decoding mada: ")
-        parse_one_event(event)
-      end
-    )
+    |> Stream.map(&parse_one_event/1)
   end
 
   defp parse_fadcs(
