@@ -14,11 +14,12 @@ defmodule MadaReader.MadaStructure do
   def write(mada_structures, path_to_mada) do
     path_to_tmp_file = prepare_tmp_file(path_to_mada)
     # n_iter = mada_structures |> length()
-    mada_structures
+    n_iter = mada_structures
     |> Stream.map(&encode_a_event/1)
     |> Stream.map(fn x -> write_an_event(x, path_to_tmp_file) end)
     |> Enum.to_list()
-    path_to_tmp_file
+    |> length
+    {path_to_tmp_file, n_iter}
   end
 
   defp prepare_tmp_file(path_to_mada) do
@@ -32,7 +33,7 @@ defmodule MadaReader.MadaStructure do
   end
 
   defp encode_a_event(mada_structure) do
-    add_space = &(&1 <> " ")
+    add_enter = &(&1 <> "\n")
     [
       mada_structure.trigger_counter,
       mada_structure.clock_counter,
@@ -48,7 +49,7 @@ defmodule MadaReader.MadaStructure do
       mada_structure.hit |> List.flatten() |> Enum.join(" ")
     ]
     |> Enum.join(" ")
-    |> add_space.()
+    |> add_enter.()
   end
 
   defp write_an_event(encoded_mada_structure, path_to_tmp_file) do

@@ -6,7 +6,7 @@
 #include <iostream>
 #include <string>
 
-void make_tree(TString path_to_tmp_file = "test01", TString out_file_name = "test01.root") {
+void make_tree(TString path_to_tmp_file = "test01", TString out_file_name = "test01.root", int n_events = 0) {
     TTree* tree = new TTree("tree", "tree");
     long long int triger_counter = 0;
     long long int clock_counter = 0;
@@ -21,9 +21,7 @@ void make_tree(TString path_to_tmp_file = "test01", TString out_file_name = "tes
 
     std::ifstream ifs(path_to_tmp_file);
     int buff1, buff2, buff3, buff4;
-    while (1)
-    {   
-        if (ifs.eof()) break;
+    for (int i_event = 0; i_event < n_events; i_event++) {
         ifs >> triger_counter
             >> clock_counter
             >> input_2ch_counter
@@ -54,11 +52,12 @@ void make_tree(TString path_to_tmp_file = "test01", TString out_file_name = "tes
 }
 
 int main(int argc, char* argv[]) {
-    if (argc != 3) {
-        std::cerr << "Usage: make_tree <inputfile> <outputfile>";
+    if (argc != 4) {
+        std::cerr << "Usage: make_tree <inputfile> <outputfile> <n_events>";
         exit(0);
     }
     std::string inputfile = argv[1];
     std::string outputfile = argv[2];
-    make_tree(inputfile, outputfile);
+    int n_events = std::stoi(argv[3]);
+    make_tree(inputfile, outputfile, n_events);
 }

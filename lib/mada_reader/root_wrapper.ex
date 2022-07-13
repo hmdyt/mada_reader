@@ -1,15 +1,15 @@
 defmodule MadaReader.RootWrapper do
   @make_tree_binary Application.fetch_env!(:mada_reader, :make_tree_binary)
 
-  def call_make_tree(path_to_tmp_file, path_to_output_file) do
-    make_tree(path_to_tmp_file, path_to_output_file)
+  def call_make_tree({path_to_tmp_file, i_iter}, path_to_output_file) do
+    make_tree(path_to_tmp_file, path_to_output_file, i_iter)
     |> make_tree_handler()
   end
 
-  defp make_tree(path_to_tmp_file, path_to_output_file) do
+  defp make_tree(path_to_tmp_file, path_to_output_file, n_iter) do
     MadaReader.ProgressBar.render_spinner(
       "calling make_tree.cxx",
-      fn -> System.cmd(@make_tree_binary, [path_to_tmp_file, path_to_output_file]) end
+      fn -> System.cmd(@make_tree_binary, [path_to_tmp_file, path_to_output_file, n_iter |> Integer.to_string]) end
     )
   end
 
