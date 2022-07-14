@@ -1,0 +1,14 @@
+version: '3'
+services:
+  mada_reader:
+    build: ./container
+    container_name: mada_reader
+    volumes:
+      - .:/workdir/
+      - /workdir/rootmacro/build
+      - /workdir/_build
+      - /workdir/.elixir_ls
+      - /workdir/.vscode
+      - /workdir/.git
+    tty: true
+    entrypoint: bash -c 'chmod 755 setup.sh && ./setup.sh && bash'
