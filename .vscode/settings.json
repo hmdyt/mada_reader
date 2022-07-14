@@ -83,5 +83,6 @@
         "memory_resource": "cpp",
         "utility": "cpp",
         "stop_token": "cpp"
-    }
+    },
+    "cmake.configureOnOpen": false
 }
