@@ -16,6 +16,14 @@ defmodule MadaReader.ProgressBar do
     ProgressBar.render(i, n, @format_bar ++ [left: msg])
   end
 
+  def render_bytes_bar(i, n, msg) do
+    try do
+      ProgressBar.render(i, n, @format_bar ++ [suffix: :bytes, left: msg])
+    rescue
+      _ -> 0
+    end
+  end
+
   def render_spinner(msg, func) do
     format = [text: msg, done: [IO.ANSI.green, "✓", IO.ANSI.reset, " Done [#{msg}]"]]
       ++ @format_spinner

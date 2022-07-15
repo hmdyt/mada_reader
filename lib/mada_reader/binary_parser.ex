@@ -1,4 +1,6 @@
 defmodule MadaReader.BinaryParser do
+  @mada_one_event_size 28812 # [bytes]
+
   def run(path_to_mada \\ "/Users/yuto/sandbox/mada_reader/per0014/GBKB-13_0003.mada") do
     path_to_mada
     |> open_mada_file()
@@ -8,16 +10,18 @@ defmodule MadaReader.BinaryParser do
   end
 
   defp open_mada_file(file_path) do
-    put_memory_usage("start at open_mada_file")
+    put_memory_usage("")
     {:ok, file} = File.open(file_path)
-    file
+    {:ok, file_stat} = File.stat(file_path)
+    file_size = file_stat.size
+    {file, file_size}
   end
 
-  defp split_in_event(file) do
-    put_memory_usage("start at split_in_event")
-    file
+  defp split_in_event({file, file_size}) do
+    events = file
     |> binread_wrapper()
     |> String.split("uPIC")
+    {events, file_size}
   end
 
   defp binread_wrapper(file) do
@@ -43,8 +47,6 @@ defmodule MadaReader.BinaryParser do
     #hit::size(163680),
     >>
   ) do
-    IO.puts ""
-    put_memory_usage("start at parse_one_event")
     %MadaReader.MadaStructure{
       trigger_counter: trigger_counter,
       clock_counter: clock_counter,
@@ -59,11 +61,15 @@ defmodule MadaReader.BinaryParser do
   end
   defp parse_one_event(_), do: nil
 
-  defp parse_all_events(splited_events) do
-    put_memory_usage("start at parse_all_events")
-    # n_events = splited_events |> length()
+  defp parse_all_events({splited_events, file_size}) do
     splited_events
-    |> Stream.map(&parse_one_event/1)
+    |> Stream.with_index()
+    |> Stream.map(
+      fn {event, i} ->
+        MadaReader.ProgressBar.render_bytes_bar(i * @mada_one_event_size, file_size, "dumping mada ")
+        parse_one_event(event)
+      end
+    )
   end
 
   defp parse_fadcs(
