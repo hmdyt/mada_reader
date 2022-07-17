@@ -36,6 +36,7 @@ defmodule MadaReader.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:optimus, "~> 0.3"},
       {:json, "~> 1.4"},
       {:erlport, "~> 0.1"},
       {:progress_bar, "~> 2.0"},

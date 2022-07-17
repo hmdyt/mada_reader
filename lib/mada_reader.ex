@@ -1,17 +1,18 @@
 defmodule MadaReader do
   def main(argv) do
     argv
-    |> parse_args()
-    |> run()
+    |> MadaReader.Cli.parse()
+    |> cli_handler()
   end
 
-  defp parse_args([inputfile, outputfile]), do: [inputfile, outputfile]
-  defp parse_args(_) do
-    IO.puts "Usage: mada_reader <input.mada> <output.root>"
-    System.halt(1)
+  defp cli_handler({[:dir], _parse_result}) do
+    0
+  end
+  defp cli_handler({[:file], parse_result}) do
+    run_file([parse_result.args.input, parse_result.args.output])
   end
 
-  def run([path_to_mada, path_to_output]) do
+  def run_file([path_to_mada, path_to_output]) do
     put_run_msg [path_to_mada, path_to_output]
     path_to_mada
     |> MadaReader.BinaryParser.run()
