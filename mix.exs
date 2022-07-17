@@ -1,11 +1,18 @@
 defmodule MadaReader.MixProject do
   use Mix.Project
 
+  @description """
+    A Gigabit Iwaki Board decoder
+  """
+
   def project do
     [
       app: :mada_reader,
+      name: "mada Reader",
+      description: @description,
+      package: package(),
       escript: escript_config(),
-      version: "0.1.0",
+      version: "0.0.1",
       elixir: "~> 1.9",
       start_permanent: Mix.env() == :prod,
       deps: deps()
@@ -19,13 +26,21 @@ defmodule MadaReader.MixProject do
     ]
   end
 
+  defp package do
+    [
+      maintainers: ["hmdyt"],
+      licenses: ["MIT"],
+      links: %{ "Github" => "https://github.com/hmdyt/mada_reader" }
+    ]
+  end
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
       {:json, "~> 1.4"},
       {:erlport, "~> 0.1"},
       {:progress_bar, "~> 2.0"},
-      {:recon, "~> 2.5.2"}
+      {:recon, "~> 2.5.2"},
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
     ]
   end
 
