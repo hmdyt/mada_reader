@@ -61,7 +61,13 @@ defmodule MadaReader.Cli do
         dir: [
           value_name: "TARGET_DIR",
           help: "like /path/to/perXXXX",
-          requireed: true,
+          required: true,
+          parser: :string
+        ],
+        procs: [
+          value_name: "PROCS",
+          help: "how many cpu cores use",
+          required: true,
           parser: :string
         ]
       ]

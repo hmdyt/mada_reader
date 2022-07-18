@@ -12,8 +12,12 @@ defmodule MadaReader.ProgressBar do
     done: [IO.ANSI.green, "✓", IO.ANSI.reset, " Done"],
   ]
 
-  def render_bar(i, n, msg) do
-    ProgressBar.render(i, n, @format_bar ++ [left: msg])
+  def render_count_bar(i, n, msg) do
+    try do
+      ProgressBar.render(i, n, @format_bar ++ [left: msg, suffix: :count])
+    rescue
+      _ -> 0
+    end
   end
 
   def render_bytes_bar(i, n, msg) do

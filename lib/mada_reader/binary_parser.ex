@@ -1,16 +1,15 @@
 defmodule MadaReader.BinaryParser do
   @mada_one_event_size 28812 # [bytes]
 
-  def run(path_to_mada \\ "/Users/yuto/sandbox/mada_reader/per0014/GBKB-13_0003.mada") do
+  def run(path_to_mada, show_progress?) do
     path_to_mada
     |> open_mada_file()
     |> split_in_event()
-    |> parse_all_events()
+    |> parse_all_events(show_progress?)
     |> Stream.filter(&(&1 != nil))
   end
 
   defp open_mada_file(file_path) do
-    put_memory_usage("")
     {:ok, file} = File.open(file_path)
     {:ok, file_stat} = File.stat(file_path)
     file_size = file_stat.size
@@ -61,12 +60,14 @@ defmodule MadaReader.BinaryParser do
   end
   defp parse_one_event(_), do: nil
 
-  defp parse_all_events({splited_events, file_size}) do
+  defp parse_all_events({splited_events, file_size}, show_progress?) do
     splited_events
     |> Stream.with_index()
     |> Stream.map(
       fn {event, i} ->
-        MadaReader.ProgressBar.render_bytes_bar(i * @mada_one_event_size, file_size, "dumping mada ")
+        if show_progress? do
+          MadaReader.ProgressBar.render_bytes_bar(i * @mada_one_event_size, file_size, "dumping mada ")
+        end
         parse_one_event(event)
       end
     )
@@ -118,10 +119,4 @@ defmodule MadaReader.BinaryParser do
 
   defp bool_to_01(true), do: 1
   defp bool_to_01(false), do: 0
-
-  defp put_memory_usage(msg) do
-    allocated = :recon_alloc.memory(:allocated) / 1000_000
-    |> Float.floor
-    IO.puts "memory usage: #{allocated} MB  #{msg}"
-  end
 end
